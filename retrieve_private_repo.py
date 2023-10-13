@@ -19,6 +19,7 @@ headers = {
 
 def get_file_content(path):
     response = requests.get(BASE_URL + path, headers=headers)
+    print(f"Status: {response.status_code}")
     if response.status_code == 200:
         content = base64.b64decode(response.json()['content']).decode('utf-8')
         return content
