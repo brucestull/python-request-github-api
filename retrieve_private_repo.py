@@ -29,13 +29,13 @@ def get_file_content(path):
         return None
 
 
-gitignore_content = get_file_content('.gitignore')
+# gitignore_content = get_file_content('.gitignore')
 urls_content = get_file_content('config/urls.py')
 
-if gitignore_content:
-    print("Contents of .gitignore:\n", gitignore_content)
-else:
-    print(".gitignore not found or unable to fetch.")
+# if gitignore_content:
+#     print("Contents of .gitignore:\n", gitignore_content)
+# else:
+#     print(".gitignore not found or unable to fetch.")
 
 if urls_content:
     print("\nContents of config/urls.py:\n", urls_content)
