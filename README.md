@@ -1,6 +1,8 @@
-# python-request-github-api
+# Python `requests` GitHub API
 
 Python script which uses 'requests' to access a private GitHub repository.
+
+This will be used by AppTracker to programatically populate models for classes, functions, and methods.
 
 ## ChatGPT Conversation
 
