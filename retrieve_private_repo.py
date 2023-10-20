@@ -31,14 +31,20 @@ def get_file_content(path):
 
 
 # gitignore_content = get_file_content('.gitignore')
-urls_content = get_file_content('config/urls.py')
+# urls_content = get_file_content('config/urls.py')
+boops_models_content = get_file_content('boops/models.py')
 
 # if gitignore_content:
 #     print("Contents of .gitignore:\n", gitignore_content)
 # else:
 #     print(".gitignore not found or unable to fetch.")
 
-if urls_content:
-    print("\nContents of config/urls.py:\n", urls_content)
+# if urls_content:
+#     print("\nContents of 'config/urls.py':\n", urls_content)
+# else:
+#     print("'config/urls.py' not found or unable to fetch.")
+
+if boops_models_content:
+    print("\nContents of 'boops/models.py':\n", boops_models_content)
 else:
-    print("config/urls.py not found or unable to fetch.")
+    print("'boops/models.py' not found or unable to fetch.")
