@@ -48,6 +48,6 @@ boops_models_content = get_file_content(file_to_get)
 #     print("'config/urls.py' not found or unable to fetch.")
 
 if boops_models_content:
-    print(f"\nContents of '{file_to_get}':\n", boops_models_content)
+    print(f"\nContents of '{file_to_get}':\n\n", boops_models_content)
 else:
     print(f"'{file_to_get}' not found or unable to fetch.")
