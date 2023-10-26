@@ -7,14 +7,14 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-USERNAME = os.getenv('USERNAME')
-TOKEN = os.getenv('TOKEN')
-REPO = os.getenv('REPO')
-BASE_URL = f'https://api.github.com/repos/{USERNAME}/{REPO}/contents/'
+USERNAME = os.getenv("USERNAME")
+TOKEN = os.getenv("TOKEN")
+REPO = os.getenv("REPO")
+BASE_URL = f"https://api.github.com/repos/{USERNAME}/{REPO}/contents/"
 
 headers = {
-    'Authorization': f'token {TOKEN}',
-    'Accept': 'application/vnd.github.v3+json'
+    "Authorization": f"token {TOKEN}",
+    "Accept": "application/vnd.github.v3+json",
 }
 
 
@@ -24,15 +24,18 @@ def get_file_content(path):
     response = requests.get(url, headers=headers)
     print(f"Response status code: {response.status_code}")
     if response.status_code == 200:
-        content = base64.b64decode(response.json()['content']).decode('utf-8')
+        content = base64.b64decode(response.json()["content"]).decode("utf-8")
         return content
     else:
         return None
 
 
+file_to_get = "Pipfile"
+
+
 # gitignore_content = get_file_content('.gitignore')
 # urls_content = get_file_content('config/urls.py')
-boops_models_content = get_file_content('boops/models.py')
+boops_models_content = get_file_content(file_to_get)
 
 # if gitignore_content:
 #     print("Contents of .gitignore:\n", gitignore_content)
@@ -45,6 +48,6 @@ boops_models_content = get_file_content('boops/models.py')
 #     print("'config/urls.py' not found or unable to fetch.")
 
 if boops_models_content:
-    print("\nContents of 'boops/models.py':\n", boops_models_content)
+    print(f"\nContents of '{file_to_get}':\n", boops_models_content)
 else:
-    print("'boops/models.py' not found or unable to fetch.")
+    print(f"'{file_to_get}' not found or unable to fetch.")
