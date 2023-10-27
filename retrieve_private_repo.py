@@ -4,7 +4,8 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables from .env file.
+# This is how we get the "USERNAME", "TOKEN", and "REPO" values.
 load_dotenv()
 
 USERNAME = os.getenv("USERNAME")
