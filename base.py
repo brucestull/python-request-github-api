@@ -19,8 +19,22 @@ headers = {
 }
 
 
-def get_file_content(path):
-    url = BASE_URL + path
+def get_github_file_content(username, token, repo, path):
+    """
+    Fetch the content of a file from a GitHub repository.
+
+    :param username: GitHub username
+    :param token: GitHub personal access token for authentication
+    :param repo: Repository name
+    :param path: Path to the file within the repository
+    :return: The content of the file as a string, or None if the request fails.
+    """
+    base_url = f"https://api.github.com/repos/{username}/{repo}/contents/"
+    url = base_url + path
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+    }
     print(f"Sending request to: {url}")
     response = requests.get(url, headers=headers)
     print(f"Response status code: {response.status_code}")
@@ -37,8 +51,8 @@ def list_files_in_path(path):
     response = requests.get(url, headers=headers)
     print(f"Response status code: {response.status_code}")
     if response.status_code == 200:
-        files = response.json()
-        file_names = [file["name"] for file in files if file["type"] == "file"]
+        items = response.json()
+        file_names = [item["name"] for item in items if item["type"] == "file"]
         return file_names
     else:
         return None
@@ -50,8 +64,8 @@ def list_directories_in_path(path):
     response = requests.get(url, headers=headers)
     print(f"Response status code: {response.status_code}")
     if response.status_code == 200:
-        files = response.json()
-        directory_names = [file["name"] for file in files if file["type"] == "dir"]
+        items = response.json()
+        directory_names = [item["name"] for item in items if item["type"] == "dir"]
         return directory_names
     else:
         return None
@@ -66,7 +80,7 @@ def main():
 
     # gitignore_content = get_file_content('.gitignore')
     # urls_content = get_file_content('config/urls.py')
-    file_content = get_file_content(file_to_get)
+    file_content = get_github_file_content(file_to_get)
 
     # if gitignore_content:
     #     print("Contents of .gitignore:\n", gitignore_content)
