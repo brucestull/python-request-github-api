@@ -5,18 +5,8 @@ import requests
 from dotenv import load_dotenv
 
 # Load environment variables from .env file.
-# This is how we get the "USERNAME", "TOKEN", and "REPO" values.
+# This is how we get the "username", "token", and "repo" values.
 load_dotenv()
-
-USERNAME = os.getenv("USERNAME")
-TOKEN = os.getenv("TOKEN")
-REPO = os.getenv("REPO")
-BASE_URL = f"https://api.github.com/repos/{USERNAME}/{REPO}/contents/"
-
-headers = {
-    "Authorization": f"token {TOKEN}",
-    "Accept": "application/vnd.github.v3+json",
-}
 
 
 def create_auth_headers(token):
