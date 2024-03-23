@@ -21,7 +21,7 @@ headers = {
 
 def create_auth_headers(token):
     """
-    Create authentication headers for GitHub API requests.
+    Factory to create authentication headers for GitHub API requests.
 
     :param token: GitHub personal access token for authentication
     :return: Dictionary with authorization and accept headers.
@@ -30,6 +30,18 @@ def create_auth_headers(token):
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json",
     }
+
+
+def create_base_url(username, repo):
+    """
+    Factory to create base URL for a GitHub API request.
+
+    :param username: GitHub username
+    :param repo: Repository name
+
+    :return: Base URL for the GitHub API request.
+    """
+    return f"https://api.github.com/repos/{username}/{repo}/contents/"
 
 
 def get_github_file_content(username, token, repo, path):
@@ -42,7 +54,7 @@ def get_github_file_content(username, token, repo, path):
     :param path: Path to the file within the repository
     :return: The content of the file as a string, or None if the request fails.
     """
-    base_url = f"https://api.github.com/repos/{username}/{repo}/contents/"
+    base_url = create_base_url(username, repo)
     url = base_url + path
     headers = create_auth_headers(token)
     print(f"Sending request to: {url}")
@@ -68,7 +80,7 @@ def list_github_files_in_path(username, token, repo, path):
     Returns:
         list: A list of file names in the directory, or None if the request fails.
     """
-    base_url = f"https://api.github.com/repos/{username}/{repo}/contents/"
+    base_url = create_base_url(username, repo)
     url = base_url + path
     headers = create_auth_headers(token)
     print(f"Sending request to: {url}")
@@ -95,7 +107,7 @@ def list_github_directories_in_path(username, token, repo, path):
     Returns:
         list: A list of directory names in the directory, or None if the request fails.
     """
-    base_url = f"https://api.github.com/repos/{username}/{repo}/contents/"
+    base_url = create_base_url(username, repo)
     url = base_url + path
     headers = create_auth_headers(token)
     print(f"Sending request to: {url}")
