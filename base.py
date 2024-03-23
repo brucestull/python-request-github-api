@@ -19,6 +19,19 @@ headers = {
 }
 
 
+def create_auth_headers(token):
+    """
+    Create authentication headers for GitHub API requests.
+
+    :param token: GitHub personal access token for authentication
+    :return: Dictionary with authorization and accept headers.
+    """
+    return {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+    }
+
+
 def get_github_file_content(username, token, repo, path):
     """
     Fetch the content of a file from a GitHub repository.
@@ -31,10 +44,7 @@ def get_github_file_content(username, token, repo, path):
     """
     base_url = f"https://api.github.com/repos/{username}/{repo}/contents/"
     url = base_url + path
-    headers = {
-        "Authorization": f"token {token}",
-        "Accept": "application/vnd.github.v3+json",
-    }
+    headers = create_auth_headers(token)
     print(f"Sending request to: {url}")
     response = requests.get(url, headers=headers)
     print(f"Response status code: {response.status_code}")
@@ -45,8 +55,22 @@ def get_github_file_content(username, token, repo, path):
         return None
 
 
-def list_files_in_path(path):
-    url = BASE_URL + path
+def list_github_files_in_path(username, token, repo, path):
+    """
+    List the files in a directory within a GitHub repository.
+
+    Args:
+        username (str): GitHub username
+        token (str): GitHub personal access token for authentication
+        repo (str): Repository name
+        path (str): Path to the directory within the repository
+
+    Returns:
+        list: A list of file names in the directory, or None if the request fails.
+    """
+    base_url = f"https://api.github.com/repos/{username}/{repo}/contents/"
+    url = base_url + path
+    headers = create_auth_headers(token)
     print(f"Sending request to: {url}")
     response = requests.get(url, headers=headers)
     print(f"Response status code: {response.status_code}")
