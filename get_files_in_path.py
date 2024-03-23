@@ -9,13 +9,13 @@ from base import list_github_files_in_path
 
 load_dotenv()
 
-USERNAME = os.getenv("USERNAME")
-TOKEN = os.getenv("TOKEN")
-REPO = os.getenv("REPO")
+username = os.getenv("USERNAME")
+token = os.getenv("TOKEN")
+repo = os.getenv("REPO")
 
 directory_path = "unimportant_notes"
 
-files = list_github_files_in_path(USERNAME, TOKEN, REPO, directory_path)
+files = list_github_files_in_path(username, token, repo, directory_path)
 
 if files:
     print(f"\nFiles in '{directory_path}':\n")

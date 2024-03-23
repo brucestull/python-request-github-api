@@ -82,8 +82,22 @@ def list_github_files_in_path(username, token, repo, path):
         return None
 
 
-def list_directories_in_path(path):
-    url = BASE_URL + path
+def list_github_directories_in_path(username, token, repo, path):
+    """
+    List the directories in a path within a GitHub repository.
+
+    Args:
+        username (str): GitHub username
+        token (str): GitHub personal access token for authentication
+        repo (str): Repository name
+        path (str): Path to the directory within the repository
+
+    Returns:
+        list: A list of directory names in the directory, or None if the request fails.
+    """
+    base_url = f"https://api.github.com/repos/{username}/{repo}/contents/"
+    url = base_url + path
+    headers = create_auth_headers(token)
     print(f"Sending request to: {url}")
     response = requests.get(url, headers=headers)
     print(f"Response status code: {response.status_code}")
