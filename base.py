@@ -1,142 +1,114 @@
 import base64
 import os
-
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables from .env file.
-# This is how we get the "username", "token", and "repo" values.
-load_dotenv()
 
+class GitHubAPI:
+    def __init__(self, username, token, repo):
+        """
+        Initializes the GitHubAPI class with user credentials and repository information.
 
-def create_auth_headers(token):
-    """
-    Factory to create authentication headers for GitHub API requests.
+        Args:
+            username (str): GitHub username
+            token (str): GitHub personal access token for authentication
+            repo (str): Repository name
+        """
+        self.username = username
+        self.token = token
+        self.repo = repo
+        self.base_url = (
+            f"https://api.github.com/repos/{self.username}/{self.repo}/contents/"
+        )
+        self.headers = {
+            "Authorization": f"token {self.token}",
+            "Accept": "application/vnd.github.v3+json",
+        }
 
-    :param token: GitHub personal access token for authentication
-    :return: Dictionary with authorization and accept headers.
-    """
-    return {
-        "Authorization": f"token {token}",
-        "Accept": "application/vnd.github.v3+json",
-    }
+    def _request(self, path, method="GET"):
+        """
+        Internal method to make a GitHub API request.
 
+        Args:
+            path (str): Path to the file or directory within the repository
+            method (str): HTTP method (e.g., "GET")
 
-def create_base_url(username, repo):
-    """
-    Factory to create base URL for a GitHub API request.
+        Returns:
+            The JSON response as a dictionary, or None if the request fails.
+        """
+        url = self.base_url + path
+        print(f"Sending request to: {url}")
+        response = requests.request(method, url, headers=self.headers)
+        print(f"Response status code: {response.status_code}")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
 
-    :param username: GitHub username
-    :param repo: Repository name
+    def get_file_content(self, path):
+        """
+        Fetch the content of a file from the GitHub repository.
 
-    :return: Base URL for the GitHub API request.
-    """
-    return f"https://api.github.com/repos/{username}/{repo}/contents/"
+        Args:
+            path (str): Path to the file within the repository
 
-
-def get_github_file_content(username, token, repo, path):
-    """
-    Fetch the content of a file from a GitHub repository.
-
-    :param username: GitHub username
-    :param token: GitHub personal access token for authentication
-    :param repo: Repository name
-    :param path: Path to the file within the repository
-    :return: The content of the file as a string, or None if the request fails.
-    """
-    base_url = create_base_url(username, repo)
-    url = base_url + path
-    headers = create_auth_headers(token)
-    print(f"Sending request to: {url}")
-    response = requests.get(url, headers=headers)
-    print(f"Response status code: {response.status_code}")
-    if response.status_code == 200:
-        content = base64.b64decode(response.json()["content"]).decode("utf-8")
-        return content
-    else:
+        Returns:
+            The content of the file as a string, or None if the request fails.
+        """
+        response = self._request(path)
+        if response:
+            content = base64.b64decode(response["content"]).decode("utf-8")
+            return content
         return None
 
+    def list_files_in_path(self, path):
+        """
+        List the files in a directory within the GitHub repository.
 
-def list_github_files_in_path(username, token, repo, path):
-    """
-    List the files in a directory within a GitHub repository.
+        Args:
+            path (str): Path to the directory within the repository
 
-    Args:
-        username (str): GitHub username
-        token (str): GitHub personal access token for authentication
-        repo (str): Repository name
-        path (str): Path to the directory within the repository
-
-    Returns:
-        list: A list of file names in the directory, or None if the request fails.
-    """
-    base_url = create_base_url(username, repo)
-    url = base_url + path
-    headers = create_auth_headers(token)
-    print(f"Sending request to: {url}")
-    response = requests.get(url, headers=headers)
-    print(f"Response status code: {response.status_code}")
-    if response.status_code == 200:
-        items = response.json()
-        file_names = [item["name"] for item in items if item["type"] == "file"]
-        return file_names
-    else:
+        Returns:
+            A list of file names in the directory, or None if the request fails.
+        """
+        response = self._request(path)
+        if response:
+            file_names = [item["name"] for item in response if item["type"] == "file"]
+            return file_names
         return None
 
+    def list_directories_in_path(self, path):
+        """
+        List the directories in a path within the GitHub repository.
 
-def list_github_directories_in_path(username, token, repo, path):
-    """
-    List the directories in a path within a GitHub repository.
+        Args:
+            path (str): Path to the directory within the repository
 
-    Args:
-        username (str): GitHub username
-        token (str): GitHub personal access token for authentication
-        repo (str): Repository name
-        path (str): Path to the directory within the repository
-
-    Returns:
-        list: A list of directory names in the directory, or None if the request fails.
-    """
-    base_url = create_base_url(username, repo)
-    url = base_url + path
-    headers = create_auth_headers(token)
-    print(f"Sending request to: {url}")
-    response = requests.get(url, headers=headers)
-    print(f"Response status code: {response.status_code}")
-    if response.status_code == 200:
-        items = response.json()
-        directory_names = [item["name"] for item in items if item["type"] == "dir"]
-        return directory_names
-    else:
+        Returns:
+            A list of directory names in the directory, or None if the request fails.
+        """
+        response = self._request(path)
+        if response:
+            directory_names = [
+                item["name"] for item in response if item["type"] == "dir"
+            ]
+            return directory_names
         return None
 
+    def check_directory_contains_apps_dot_py(self, path):
+        """
+        Check if the directory contains an `apps.py` file.
 
-def main():
+        Args:
+            path (str): Path to the directory within the repository
 
-    # file_to_get = "Pipfile"
-    # file_to_get = "notes/debug_works_but_cli_doesnt.md"
-    file_to_get = "unimportant_notes/models.py"
-    # file_to_get = "models.py"
+        Returns:
+            True if the directory contains an `apps.py` file, False otherwise.
+        """
+        files = self.list_files_in_path(path)
+        if files:
+            return "apps.py" in files
+        return False
 
-    # gitignore_content = get_file_content('.gitignore')
-    # urls_content = get_file_content('config/urls.py')
-    file_content = get_github_file_content(file_to_get)
-
-    # if gitignore_content:
-    #     print("Contents of .gitignore:\n", gitignore_content)
-    # else:
-    #     print(".gitignore not found or unable to fetch.")
-
-    # if urls_content:
-    #     print("\nContents of 'config/urls.py':\n", urls_content)
-    # else:
-    #     print("'config/urls.py' not found or unable to fetch.")
-
-    if file_content:
-        print(f"\nContents of '{file_to_get}':\n\n", file_content)
-    else:
-        print(f"'{file_to_get}' not found or unable to fetch.")
-
-
-if __name__ == "__main__":
-    main()
+    def __str__(self):
+        return f"GitHubAPI for user {self.username} and repository {self.repo}"

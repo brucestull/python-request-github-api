@@ -5,7 +5,7 @@ import pprint
 
 from dotenv import load_dotenv
 
-from base import list_github_files_in_path
+from base import GitHubAPI
 
 load_dotenv()
 
@@ -15,7 +15,9 @@ repo = os.getenv("REPO")
 
 directory_path = "unimportant_notes"
 
-files = list_github_files_in_path(username, token, repo, directory_path)
+api = GitHubAPI(username, token, repo)
+
+files = api.list_files_in_path(directory_path)
 
 if files:
     print(f"\nFiles in '{directory_path}':\n")
