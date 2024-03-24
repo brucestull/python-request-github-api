@@ -110,5 +110,24 @@ class GitHubAPI:
             return "apps.py" in files
         return False
 
+    def list_directories_with_apps_dot_py(self, path):
+        """
+        List the directories that contain an `apps.py` file.
+
+        Args:
+            path (str): Path to the directory within the repository
+
+        Returns:
+            A list of directory names that contain an `apps.py` file.
+        """
+        directories = self.list_directories_in_path(path)
+        if directories:
+            return [
+                dir_name
+                for dir_name in directories
+                if self.check_directory_contains_apps_dot_py(dir_name)
+            ]
+        return []
+
     def __str__(self):
         return f"GitHubAPI for user {self.username} and repository {self.repo}"
