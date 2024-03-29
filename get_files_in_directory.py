@@ -34,16 +34,16 @@ else:
     print(f"Directories in '{initial_path}' not found or unable to fetch.")
 
 # Get the Django application directories:
-django_app_directories = [
+directories_containing_check_file = [
     directory
     for directory in directories
     if api.check_directory_contains_file(directory, check_file)
 ]
 
 # Print the Django application directories:
-if django_app_directories:
-    print(f"\nDjango application directories in '{initial_path}':\n")
-    pprint(django_app_directories)
+if directories_containing_check_file:
+    print(f"\n{check_file} found in directories '{initial_path}':\n")
+    pprint(directories_containing_check_file)
 
 # # Iterate over the directories:
 # for directory in directories:
