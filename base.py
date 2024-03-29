@@ -30,7 +30,7 @@ class GitHubAPI:
         Internal method to make a GitHub API request.
 
         Args:
-            path (str): Path to the file or directory within the repository
+            path (str): Relative path to the file or directory within the repository
             method (str): HTTP method (e.g., "GET")
 
         Returns:
@@ -47,7 +47,7 @@ class GitHubAPI:
 
     def get_file_content(self, path):
         """
-        Fetch the content of a file from the GitHub repository.
+        Sends API request to fetch the content of a file from the GitHub repository.
 
         Args:
             path (str): Path to the file within the repository
@@ -61,25 +61,9 @@ class GitHubAPI:
             return content
         return None
 
-    def list_files_in_path(self, path):
-        """
-        List the files in a directory within the GitHub repository.
-
-        Args:
-            path (str): Path to the directory within the repository
-
-        Returns:
-            A list of file names in the directory, or None if the request fails.
-        """
-        response = self._request(path)
-        if response:
-            file_names = [item["name"] for item in response if item["type"] == "file"]
-            return file_names
-        return None
-
     def list_directories_in_path(self, path):
         """
-        List the directories in a path within the GitHub repository.
+        Sends API request to list the directories in a path within the GitHub repository.
 
         Args:
             path (str): Path to the directory within the repository
@@ -95,37 +79,55 @@ class GitHubAPI:
             return directory_names
         return None
 
-    def check_directory_contains_apps_dot_py(self, path):
+    def list_files_in_path(self, path):
         """
-        Check if the directory contains an `apps.py` file.
+        Sends an API request to list the files in a directory within the GitHub repository.
 
         Args:
             path (str): Path to the directory within the repository
 
         Returns:
-            True if the directory contains an `apps.py` file, False otherwise.
+            A list of file names in the directory, or None if the request fails.
+        """
+        response = self._request(path)
+        if response:
+            file_names = [item["name"] for item in response if item["type"] == "file"]
+            return file_names
+        return None
+
+    def check_directory_contains_file(self, path, check_file):
+        """
+        Check if the directory contains check_file.
+
+        Args:
+            path (str): Path to the directory within the repository
+            check_file (str): File to check for in the directory
+
+        Returns:
+            True if the directory contains check_file, False otherwise.
         """
         files = self.list_files_in_path(path)
         if files:
-            return "apps.py" in files
+            return check_file in files
         return False
 
-    def list_directories_with_apps_dot_py(self, path):
+    def list_directories_containing_file(self, path, check_file):
         """
-        List the directories that contain an `apps.py` file.
+        Sends API request, via `list_directories_in_path`, and returns a list of the directories that contain check_file.
 
         Args:
             path (str): Path to the directory within the repository
+            check_file (str): File to check for in the directory
 
         Returns:
-            A list of directory names that contain an `apps.py` file.
+            A list of directory names that contains check_file.
         """
         directories = self.list_directories_in_path(path)
         if directories:
             return [
-                dir_name
-                for dir_name in directories
-                if self.check_directory_contains_apps_dot_py(dir_name)
+                directory
+                for directory in directories
+                if self.check_directory_contains_file(directory, check_file)
             ]
         return []
 

@@ -6,13 +6,15 @@ from dotenv import load_dotenv
 
 from base import GitHubAPI
 
-load_dotenv()
-
+# Load environment variables:
+load_dotenv()  # This line isn't needed when running with VS Code Debug Configuration
 username = os.getenv("USERNAME")
 token = os.getenv("TOKEN")
 repo = os.getenv("REPO")
 
+# Relative path to the file within the repository:
 file_to_get = "unimportant_notes/models.py"
+# file_to_get = "manage.py"
 
 api = GitHubAPI(username, token, repo)
 
