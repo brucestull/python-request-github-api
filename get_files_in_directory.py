@@ -8,14 +8,17 @@ from base import GitHubAPI
 
 from pprint import pprint
 
-load_dotenv()
-
+# Load environment variables:
+load_dotenv()  # This line isn't needed when running with VS Code Debug Configuration
 username = os.getenv("USERNAME")
 token = os.getenv("TOKEN")
 repo = os.getenv("REPO")
 
 # Start in the root directory of the project:
 initial_path = ""
+
+# Specify the file to check for:
+check_file = "apps.py"
 
 # Instantiate the GitHubAPI class:
 api = GitHubAPI(username, token, repo)
@@ -31,16 +34,16 @@ else:
     print(f"Directories in '{initial_path}' not found or unable to fetch.")
 
 # Get the Django application directories:
-django_app_directories = [
+directories_containing_check_file = [
     directory
     for directory in directories
-    if api.check_directory_contains_apps_dot_py(directory)
+    if api.check_directory_contains_file(directory, check_file)
 ]
 
 # Print the Django application directories:
-if django_app_directories:
-    print(f"\nDjango application directories in '{initial_path}':\n")
-    pprint(django_app_directories)
+if directories_containing_check_file:
+    print(f"\n{check_file} found in directories '{initial_path}':\n")
+    pprint(directories_containing_check_file)
 
 # # Iterate over the directories:
 # for directory in directories:

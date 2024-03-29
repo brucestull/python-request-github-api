@@ -7,20 +7,21 @@ from dotenv import load_dotenv
 
 from base import GitHubAPI
 
-load_dotenv()
-
+# Load environment variables:
+load_dotenv()  # This line isn't needed when running with VS Code Debug Configuration
 username = os.getenv("USERNAME")
 token = os.getenv("TOKEN")
 repo = os.getenv("REPO")
 
-directory_path = "unimportant_notes"
+# path = "unimportant_notes"
+path = ""
 
 api = GitHubAPI(username, token, repo)
 
-files = api.list_files_in_path(directory_path)
+files = api.list_files_in_path(path)
 
 if files:
-    print(f"\nFiles in '{directory_path}':\n")
+    print(f"\nFiles in '{path}':\n")
     pprint.pprint(files)
 else:
-    print(f"Files in '{directory_path}' not found or unable to fetch.")
+    print(f"Files in '{path}' not found or unable to fetch.")
