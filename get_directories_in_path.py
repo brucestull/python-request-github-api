@@ -5,7 +5,7 @@ import pprint
 
 from dotenv import load_dotenv
 
-from base import list_github_directories_in_path
+from base import GitHubAPI
 
 load_dotenv()
 
@@ -14,8 +14,11 @@ token = os.getenv("TOKEN")
 repo = os.getenv("REPO")
 
 directory_path = "unimportant_notes"
+directory_path = ""
 
-directories = list_github_directories_in_path(username, token, repo, directory_path)
+api = GitHubAPI(username, token, repo)
+
+directories = api.list_directories_in_path(directory_path)
 
 if directories:
     print(f"\nDirectories in '{directory_path}':\n")
