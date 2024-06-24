@@ -18,7 +18,7 @@ repo = os.getenv("REPO")
 initial_path = ""
 
 # Specify the file to check for:
-check_file = "apps.py"
+check_file = "urls.py"
 
 # Instantiate the GitHubAPI class:
 api = GitHubAPI(username, token, repo)

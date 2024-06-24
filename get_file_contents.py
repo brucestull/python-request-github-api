@@ -13,7 +13,7 @@ token = os.getenv("TOKEN")
 repo = os.getenv("REPO")
 
 # Relative path to the file within the repository:
-file_to_get = "unimportant_notes/models.py"
+file_to_get = "runner.py"
 # file_to_get = "manage.py"
 
 api = GitHubAPI(username, token, repo)
